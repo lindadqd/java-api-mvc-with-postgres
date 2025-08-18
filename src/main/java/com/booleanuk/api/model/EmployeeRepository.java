@@ -81,27 +81,29 @@ public class EmployeeRepository {
     }
 
     public Employee add(Employee employee) throws SQLException {
-        String SQL = "INSERT INTO Employees(name, jobname, salarygrade, department) VALUES(?, ?, ?, ?)";
-        PreparedStatement statement = this.connection.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
-        statement.setString(1, employee.getName());
-        statement.setString(2, employee.getJobName());
-        statement.setString(3, employee.getSalaryGrade());
-        statement.setString(4, employee.getDepartment());
-        int rowsAffected = statement.executeUpdate();
-        int newId = 0;
-        if (rowsAffected > 0) {
-            try (ResultSet rs = statement.getGeneratedKeys()) {
-                if (rs.next()) {
-                    newId = rs.getInt(1);
+        if (!employee.getName().isBlank() && !employee.getSalaryGrade().isBlank() && !employee.getDepartment().isBlank() && !employee.getJobName().isBlank()) {
+            String SQL = "INSERT INTO Employees(name, jobname, salarygrade, department) VALUES(?, ?, ?, ?)";
+            PreparedStatement statement = this.connection.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
+            statement.setString(1, employee.getName());
+            statement.setString(2, employee.getJobName());
+            statement.setString(3, employee.getSalaryGrade());
+            statement.setString(4, employee.getDepartment());
+            int rowsAffected = statement.executeUpdate();
+            int newId = 0;
+            if (rowsAffected > 0) {
+                try (ResultSet rs = statement.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        newId = rs.getInt(1);
+                    }
+                } catch (Exception e) {
+                    System.out.println("Oops: " + e);
                 }
-            } catch (Exception e) {
-                System.out.println("Oops: " + e);
+                employee.setId(newId);
+            } else {
+                employee = null;
             }
-            employee.setId(newId);
-        } else {
-            employee = null;
-        }
-        return employee;
+            return employee;
+        } return null;
     }
 
     public Employee update(int id, Employee employee) throws SQLException {

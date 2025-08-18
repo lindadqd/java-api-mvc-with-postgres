@@ -26,12 +26,12 @@ public class EmployeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Employee create(@RequestBody Employee newEmployee) throws SQLException {
+    public ResponseEntity<String> create(@RequestBody Employee newEmployee) throws SQLException {
         Employee theEmployee = this.employeeRepository.add(newEmployee);
         if (theEmployee == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "unable to create the specified employee");
         }
-        return theEmployee;
+        return new ResponseEntity<String>(HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
