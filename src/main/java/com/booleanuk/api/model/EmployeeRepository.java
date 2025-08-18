@@ -107,24 +107,26 @@ public class EmployeeRepository {
     }
 
     public Employee update(int id, Employee employee) throws SQLException {
-        String SQL = "UPDATE Employees " +
-                "SET name = ? ," +
-                "jobName = ? ," +
-                "salaryGrade = ? ," +
-                "department = ? " +
-                "WHERE id = ? ";
-        PreparedStatement statement = this.connection.prepareStatement(SQL);
-        statement.setString(1, employee.getName());
-        statement.setString(2, employee.getJobName());
-        statement.setString(3, employee.getSalaryGrade());
-        statement.setString(4, employee.getDepartment());
-        statement.setInt(5, id);
-        int rowsAffected = statement.executeUpdate();
-        Employee updatedEmployee= null;
-        if (rowsAffected > 0) {
-            updatedEmployee = this.getOne(id);
-        }
-        return updatedEmployee;
+        if (!employee.getName().isBlank() && !employee.getSalaryGrade().isBlank() && !employee.getDepartment().isBlank() && !employee.getJobName().isBlank()) {
+            String SQL = "UPDATE Employees " +
+                    "SET name = ? ," +
+                    "jobName = ? ," +
+                    "salaryGrade = ? ," +
+                    "department = ? " +
+                    "WHERE id = ? ";
+            PreparedStatement statement = this.connection.prepareStatement(SQL);
+            statement.setString(1, employee.getName());
+            statement.setString(2, employee.getJobName());
+            statement.setString(3, employee.getSalaryGrade());
+            statement.setString(4, employee.getDepartment());
+            statement.setInt(5, id);
+            int rowsAffected = statement.executeUpdate();
+            Employee updatedEmployee = null;
+            if (rowsAffected > 0) {
+                updatedEmployee = this.getOne(id);
+            }
+            return updatedEmployee;
+        } return null;
     }
 
     public Employee delete(int id) throws SQLException {
@@ -140,5 +142,14 @@ public class EmployeeRepository {
             deletedEmployee = null;
         }
         return deletedEmployee;
+    }
+
+    public boolean checkName(Employee employee, int id) throws SQLException {
+        List<Employee> everyone = this.getAll();
+        for (Employee employeeInList : everyone) {
+            if (employeeInList.getName().equals(employee.getName())){
+                return true;
+            }
+        } return false;
     }
 }

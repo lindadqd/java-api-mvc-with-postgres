@@ -29,7 +29,7 @@ public class EmployeController {
     public ResponseEntity<String> create(@RequestBody Employee newEmployee) throws SQLException {
         Employee theEmployee = this.employeeRepository.add(newEmployee);
         if (theEmployee == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "unable to create the specified employee");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not update the employee, please check all required fields are correct.");
         }
         return new ResponseEntity<String>(HttpStatus.CREATED);
     }
@@ -38,19 +38,26 @@ public class EmployeController {
     public Employee getOne(@PathVariable int id) throws SQLException {
         Employee employee = this.employeeRepository.getOne(id);
         if (employee == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No customer with that Id found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No employees with that id were found");
         }
         return employee;
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public Employee update(@PathVariable (name = "id") int id, @RequestBody Employee employee) throws SQLException {
+    public ResponseEntity<String>  update(@PathVariable (name = "id") int id, @RequestBody Employee employee) throws SQLException {
         Employee toBeUpdated = this.employeeRepository.getOne(id);
         if (toBeUpdated == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Did not find this employee");
         }
-        return this.employeeRepository.update(id, employee);
+
+        boolean updateEmployee = employeeRepository.checkName(employee, id);
+        Employee updatedEmployee = this.employeeRepository.update(id, employee);
+        if(!updateEmployee || updatedEmployee == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not update the employee, please check all required fields are correct.");
+        }
+
+        return new ResponseEntity<String>(HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
