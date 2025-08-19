@@ -29,7 +29,7 @@ public class EmployeController {
     public ResponseEntity<String> create(@RequestBody Employee newEmployee) throws SQLException {
         Employee theEmployee = this.employeeRepository.add(newEmployee);
         if (theEmployee == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not update the employee, please check all required fields are correct.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not create the employee, please check all required fields are correct.");
         }
         return new ResponseEntity<String>(HttpStatus.CREATED);
     }

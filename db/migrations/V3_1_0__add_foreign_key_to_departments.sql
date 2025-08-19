@@ -1,2 +1,5 @@
 ALTER TABLE Employees
-ADD CONSTRAINT fk_department FOREIGN KEY (department) REFERENCES Departments(name);
+ADD COLUMN department_id INT;
+
+ALTER TABLE Employees
+ADD CONSTRAINT fk_department_id FOREIGN KEY (department_id) REFERENCES Departments(id);

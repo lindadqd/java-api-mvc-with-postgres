@@ -1,5 +1,6 @@
 CREATE TABLE IF NOT EXISTS Salaries(
-    grade TEXT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
+    grade TEXT,
     minSalary INTEGER,
     maxSalary INTEGER
 );

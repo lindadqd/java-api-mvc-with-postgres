@@ -1,4 +1,5 @@
 CREATE TABLE IF NOT EXISTS Departments (
-    name TEXT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
+    name TEXT,
     location TEXT
 );

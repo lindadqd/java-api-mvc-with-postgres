@@ -56,8 +56,8 @@ public class EmployeeRepository {
                     results.getInt("id"),
                     results.getString("name"),
                     results.getString("jobname"),
-                    results.getString("salarygrade"),
-                    results.getString("department"));
+                    results.getInt("salary_id"),
+                    results.getInt("department_id"));
             everyone.add(theEmployee);
         }
         return everyone;
@@ -74,20 +74,20 @@ public class EmployeeRepository {
                     results.getInt("id"),
                     results.getString("name"),
                     results.getString("jobname"),
-                    results.getString("salarygrade"),
-                    results.getString("department"));
+                     results.getInt("salary_id"),
+                     results.getInt("department_id"));
         }
         return employee;
     }
 
     public Employee add(Employee employee) throws SQLException {
-        if (!employee.getName().isBlank() && !employee.getSalaryGrade().isBlank() && !employee.getDepartment().isBlank() && !employee.getJobName().isBlank()) {
-            String SQL = "INSERT INTO Employees(name, jobname, salarygrade, department) VALUES(?, ?, ?, ?)";
+        if (!employee.getName().isBlank() && employee.getSalary_id() > 0 && employee.getDepartment_id() > 0 && !employee.getJobName().isBlank()) {
+            String SQL = "INSERT INTO Employees(name, jobname, salary_id, department_id) VALUES(?, ?, ?, ?)";
             PreparedStatement statement = this.connection.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, employee.getName());
             statement.setString(2, employee.getJobName());
-            statement.setString(3, employee.getSalaryGrade());
-            statement.setString(4, employee.getDepartment());
+            statement.setInt(3, employee.getSalary_id());
+            statement.setInt(4, employee.getDepartment_id());
             int rowsAffected = statement.executeUpdate();
             int newId = 0;
             if (rowsAffected > 0) {
@@ -107,18 +107,18 @@ public class EmployeeRepository {
     }
 
     public Employee update(int id, Employee employee) throws SQLException {
-        if (!employee.getName().isBlank() && !employee.getSalaryGrade().isBlank() && !employee.getDepartment().isBlank() && !employee.getJobName().isBlank()) {
+        if (!employee.getName().isBlank() && employee.getSalary_id() > 0 && employee.getDepartment_id() > 0 && !employee.getJobName().isBlank()) {
             String SQL = "UPDATE Employees " +
                     "SET name = ? ," +
                     "jobName = ? ," +
-                    "salaryGrade = ? ," +
-                    "department = ? " +
+                    "salary_id = ? ," +
+                    "department_id = ? " +
                     "WHERE id = ? ";
             PreparedStatement statement = this.connection.prepareStatement(SQL);
             statement.setString(1, employee.getName());
             statement.setString(2, employee.getJobName());
-            statement.setString(3, employee.getSalaryGrade());
-            statement.setString(4, employee.getDepartment());
+            statement.setInt(3, employee.getSalary_id());
+            statement.setInt(4, employee.getDepartment_id());
             statement.setInt(5, id);
             int rowsAffected = statement.executeUpdate();
             Employee updatedEmployee = null;
